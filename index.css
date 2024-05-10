@@ -1,0 +1,245 @@
+/* Reset some browser default styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Nunito', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-image:url('1.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Header styles */
+.header {
+  background-color: #ffdbac;
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  color: #663d00;
+}
+
+.header-img-left{
+  position: absolute;
+  left: 5rem;
+  top: 6.5%;
+  transform: translateY(-50%);
+  width: 10rem;
+  height: auto;
+}
+
+.header-img-right{
+  position: absolute;
+  right: 5rem;
+  top: 6.5%;
+  transform: translateY(-50%);
+  width: 10rem;
+  height: auto;
+}
+
+.top-alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  text-align: center;
+  background-color: #ffebcd; /* 浅黄色背景，用于警告提示 */
+  color: #8a6d3b; /* 深棕色文字，易于阅读 */
+  z-index: 1005; /* 确保提示总在最上层 */
+  display: none; /* 初始隐藏 */
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.heading-primary {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  margin-top: 0.5rem;
+  font-weight: 400;
+}
+
+/* Form and input styles */
+.loading-indicator {
+  display: none;
+  text-align: center;
+  font-style: italic;
+  color: gray;
+}
+
+.user-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #488fcc; /* 将此颜色替换为您想要的颜色 */
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 0.75rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  font-size: 0.¾rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.input-field {
+  width: 90%;
+  height: 4rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+  transition: border-color 0.2s ease-in-out;
+  white-space: normal;
+  word-wrap: break-word;
+  resize: none;
+  overflow-y: auto;
+}
+
+.user-input-box {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #3f51b5;
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  position: absolute; /* 从fixed改为absolute */
+  left: 52%; /* 元素左边缘相对于父元素水平居中 */
+  transform: translateX(-50%); /* 通过translateX调整自身位置，使其完全居中 */
+  bottom: 12%;
+  width: 70%;
+  white-space: normal;
+  overflow-y: auto; /* 出现滚动条，必要时滚动 */
+  word-wrap: break-word; /*自动换行*/
+  resize: none;
+}
+
+.submit-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background-color: #3f51b5;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 2rem; 
+}
+
+.submit-button:hover {
+  background-color: #303f9f;
+}
+
+
+p {
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.processing-message {
+  position: fixed; /* 或 absolute，根据需要调整 */
+  top: 50%; /* 调整以居中显示 */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  z-index: 1000; /* 确保在其他元素之上 */
+  text-align: center;
+}
+
+/* Output section styles */
+.output-section {
+  padding: 2rem;
+  margin-right: auto;
+  margin-left: auto;
+  width: 80rem;
+}
+
+.result-container {
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 1rem; /* 添加内边距 */
+  border: 1px solid #ccc; /* 添加边框 */
+  border-radius: 0.25rem; /* 添加圆角 */
+  background-color: rgba(220, 220, 220, 0.95); /* 可选：添加浅色背景以区分其他内容 */
+  word-wrap: break-word; /*自动换行*/
+  max-height: 35rem; /* 调整为合适的高度，防止遮挡下方输入框 */
+  overflow-y: auto; /* 出现滚动条，必要时滚动 */
+  scrollbar-width: thin; /* 可选：设置滚动条宽度 */
+  scrollbar-color: #ccc #f8f8f8; /* 可选：设置滚动条颜色 */
+}
+
+/*server response*/
+.server-response-box {
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.icon{
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+/* styles.css */
+.typewriter-effect {
+  font-family: 'Courier New', monospace; /* 打字机风格字体 */
+  white-space: nowrap; /* 防止文本换行 */
+  overflow: hidden; /* 隐藏超出部分 */
+}
+
+/* 打字动画 */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* Responsive styles */
+@media (min-width: 768px) {
+  .container {
+    padding: 0 ⅓rem;
+  }
+
+}

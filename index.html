@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>婴幼儿成长发育问答系统</title>
+    <!-- 引入外部CSS文件以保持代码整洁 -->
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <header class="header">
+        <img src="chatu1.jpg",alt="左侧图片" class="header-img-left">
+        婴幼儿成长发育问答系统
+        <img src="chatu3.jpg",alt="右侧图片" class="header-img-right">
+        <p>可以向我提问任何有关婴幼儿成长发育的问题</p>
+    </header>
+
+    <main>
+        <label for="user-input" class="input-label"></label>
+        <div class="input-with-icon">
+            <div class="user-icon"></div>
+            <textarea type="text" id="user-input" name="input-value" class="input-field"></textarea>
+        </div>
+        <button type="button" id="submit-button" class="submit-button">提交</button>
+
+        <section class="output-section">
+            <div id="result-container" class="result-container"></div>
+        </section>
+        <div id="top-alert" class="top-alert" style="display:none;">输入不能为空</div>
+    </main>
+
+    <script>
+        function showAlert() {
+            const alertDiv = document.getElementById('top-alert');
+            alertDiv.style.display = 'block';
+            setTimeout(() => {
+                alertDiv.style.display = 'none'; // 提示几秒后自动消失
+            }, 2000);
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultContainer = document.getElementById('result-container');
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.classList.add('loading-indicator');
+            loadingIndicator.textContent = '正在加载中，请稍后...';
+    
+            const userInput = document.getElementById('user-input');
+            const submitButton = document.getElementById('submit-button');
+            
+            let isProcessing = false;
+            let processingMessage = null;
+    
+            function showProcessingMessage() {
+                if (!processingMessage) {
+                    processingMessage = document.createElement('div');
+                    processingMessage.className = 'processing-message';
+                    processingMessage.textContent = '正在输出中，请稍候...';
+                    document.body.appendChild(processingMessage);
+                }
+            }
+            function hideProcessingMessage() {
+                if (processingMessage) {
+                    processingMessage.remove();
+                    processingMessage = null;
+                }
+            }
+
+            function scrollToBottom(){
+                resultContainer.scrollTop = resultContainer.scrollHeight;
+            }
+            
+            async function handleUserInput(event){
+                event.preventDefault();
+                const inputValue = userInput.value.trim();
+                userInput.value = '';
+    
+
+                if (!inputValue) {
+                    showAlert();
+                    return;
+                }
+    
+                submitButton.disabled = true;
+                userInput.disabled = true;
+                if (isProcessing) {
+                    showProcessingMessage();
+                    return;
+                }
+                isProcessing = true;
+                const error_Message = "处理失败，请稍后重试";
+                try {
+                    resultContainer.appendChild(loadingIndicator);
+                    loadingIndicator.style.display = 'block';
+                    const response = await fetch('http://10.102.32.202:8090', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ input: inputValue })
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error('服务器响应异常');
+                    }
+
+                    const result = await response.json();
+                    loadingIndicator.style.display = 'none';
+
+                    // 在追加回答之前，先追加用户输入
+                    const realInput = inputValue.replace(/\n/g,'<br>');
+                    const questionIcon = '<img src="question.jpg" alt="问题图标" class = "icon">';
+                    resultContainer.insertAdjacentHTML('beforeend', `${questionIcon}<strong>问题:</strong> ${realInput}<br>`);
+                    scrollToBottom();
+                    
+                    // 追加输出
+                    const responseIcon = '<img src="answer.jpg" alt="回答图标" class = "icon">';
+                    const newText = result.message.replace(/\n/g, '<br>');
+                    const typingEffect = (text, container) => {
+                        return new Promise((resolve) => {
+                            let typedText = '';
+                            const typingInterval = 50; // 每个字符之间的时间间隔，单位为毫秒
+                            const typeTextCharByChar = (charIndex) => {
+                                if(charIndex == -1)
+                                {
+                                    container.insertAdjacentHTML('beforeend',`<strong>${responseIcon}response:</strong>`);
+                                    setTimeout(() => typeTextCharByChar(0), typingInterval);
+                                    return;
+                                }
+                                typedText = text.charAt(charIndex);
+                                container.insertAdjacentHTML('beforeend',`<span class="typewriter-effect">${typedText}</span>`);
+                                if(charIndex < text.length - 1) { // 确保不会越界
+                                    setTimeout(() => typeTextCharByChar(charIndex + 1), typingInterval);
+                                    scrollToBottom();
+                                } else {
+                                    scrollToBottom();
+                                    resolve(); // 打字完成
+                                }
+                            };
+                            typeTextCharByChar(-1);
+                        });
+                    };
+
+                    typingEffect(newText, resultContainer).then(() => {
+                        resultContainer.insertAdjacentHTML('beforeend',`<br><br>`);
+                        userInput.value = '';
+                        submitButton.disabled = false;
+                        userInput.disabled = false;
+                        isProcessing = false;
+                        hideProcessingMessage();
+                    })
+
+                } catch (error) {
+                    userInput.value = '';
+                    submitButton.disabled = false;
+                    userInput.disabled = false;
+                    isProcessing = false;
+                    loadingIndicator.style.display = 'none';
+                    const responseIcon = '<img src="answer.jpg" alt="回答图标" class = "icon">';
+                    resultContainer.insertAdjacentHTML('beforeend',`<strong>${responseIcon}:</strong> ${error_Message}<br><br>`);
+                }
+            }
+
+
+            submitButton.addEventListener('click', handleUserInput);
+            userInput.addEventListener('keydown',  (event) => {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    handleUserInput(event);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+
